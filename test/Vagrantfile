@@ -1,0 +1,37 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # Every Vagrant virtual environment requires a box to build off of.
+  config.vm.box = "ubuntu/trusty64"
+
+  # Virtualbox config
+  ebs = 'ebs.vdi'
+  config.vm.provider "virtualbox" do |vb|
+    # workaround to bug in mysql 5.6, see https://bugs.launchpad.net/ubuntu/+source/mysql-5.6/+bug/1312936
+    vb.memory = 1024
+
+    unless File.exist?(ebs)
+      vb.customize ['createhd', '--filename', ebs, '--size', 1 * 1024]
+    end
+    vb.customize ['storageattach', :id, '--storagectl', 'SATAController', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', ebs]
+  end
+
+  # vm name
+  config.vm.define :ansible_lemp do |t|
+  end
+
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :box
+  end
+
+  # Provisioning with Ansible
+  config.vm.provision "ansible" do |ansible|
+    ansible.inventory_path = "inventory"
+    ansible.limit = "vagrant"
+    ansible.playbook = "test.yml"
+  end
+end

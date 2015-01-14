@@ -1,0 +1,12 @@
+---
+- hosts: all
+  sudo: yes
+  vars:
+    mysql_root_passwd: 'asdf'
+    mysql_use_ebs: true
+    mysql_ebsdev: sdb
+    nginx_delete_default_site: true
+    lemp_upload_max_filesize: 8M
+    lemp_post_max_size: 26M
+  roles:
+    - ansible-lemp
