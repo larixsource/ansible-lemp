@@ -19,6 +19,12 @@ Dependencies
 
 This role depends on the roles `larixsource.ec2-mysql` and `azavea.nginx`.
 
+Install Playbook
+----------------
+
+`
+    ansible-galaxy install larixsource.lemp
+`    
 Example Playbook
 ----------------
 
